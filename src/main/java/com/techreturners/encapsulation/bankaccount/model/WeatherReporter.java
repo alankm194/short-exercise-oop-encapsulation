@@ -6,12 +6,26 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class WeatherReporter {
+    enum LOCATION {
+        LONDON("London"),
+        CAPE_TOWN("Cape Town"),
+        CALIFORNIA("California");
 
+        private final String label;
+
+        LOCATION(String label) {
+            this.label = label;
+        }
+
+        private String getLabel() {
+            return label;
+        }
+    }
     private String location;
     private double temperatureInCelsius;
-    private final static int MAX_TEMP_IN_CELSIUS= 30;
-    private final static int MIN_TEMP_IN_CELSIUS= 10;
-    private final static String DEFAULT_WEATHER = "🔆";
+    private final static int MAX_TEMP_IN_CELSIUS = 30;
+    private final static int MIN_TEMP_IN_CELSIUS = 10;
+    private final static String DEFAULT_WEATHER_EMOJI = "🔆";
     private final static Map<LOCATION, String> locationWeatherMap;
 
     static {
@@ -21,42 +35,30 @@ public class WeatherReporter {
         locationWeatherMap.put(LOCATION.CALIFORNIA, "🌤");
     }
 
-    enum LOCATION {
-        LONDON("London"),
-        CAPE_TOWN("Cape Town"),
-        CALIFORNIA("California");
-
-        private final String label;
-
-        LOCATION(String label) {
-           this.label = label;
-        }
-    }
-
-
     public WeatherReporter(String location, double temperatureInCelsius) {
         this.location = location;
         this.temperatureInCelsius = temperatureInCelsius;
     }
 
     private double convertCelsiusToFahrenheit(double temp) {
-        return (9.0 / 5.0) * temp + 32;
+        final int fahrenheitConstant = 32;
+        final double fahrenheitFraction = (9.0 / 5.0);
+        return fahrenheitFraction * temp + fahrenheitConstant;
     }
     public String print() {
-        double newTempFahrenheit = convertCelsiusToFahrenheit(temperatureInCelsius);
         return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.",
                 location,
-                getWeatherFromLocation(location),
+                getWeatherEmojiFromLocation(location),
                 getResponseFromTemperature(),
-                newTempFahrenheit);
+                convertCelsiusToFahrenheit(temperatureInCelsius));
     }
 
-    private static String getWeatherFromLocation(String location) {
+    private static String getWeatherEmojiFromLocation(String location) {
         return Arrays.stream(LOCATION.values())
-                .filter(enumLocation -> enumLocation.label.equalsIgnoreCase(location))
+                .filter(enumLocation -> enumLocation.getLabel().equalsIgnoreCase(location))
                 .findFirst()
                 .map(locationWeatherMap::get)
-                .orElse(DEFAULT_WEATHER);
+                .orElse(DEFAULT_WEATHER_EMOJI);
     }
 
 
