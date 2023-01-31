@@ -43,7 +43,7 @@ public class WeatherReporter {
     private double convertCelsiusToFahrenheit(double temp) {
         final int fahrenheitConstant = 32;
         final double fahrenheitFraction = (9.0 / 5.0);
-        return fahrenheitFraction * temp + fahrenheitConstant;
+        return (fahrenheitFraction * temp) + fahrenheitConstant;
     }
     public String print() {
         return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.",
